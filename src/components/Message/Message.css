@@ -1,0 +1,36 @@
+.message {
+    
+}
+
+.message-avatar {
+
+}
+
+.message-photo {
+
+}
+
+.message-content {
+
+}
+
+.message-author {
+
+}
+
+.message-body {
+
+}
+
+.message-text {
+    word-wrap: break-word;
+    white-space: pre-wrap
+}
+
+.message-fwd_wrap {
+    border-Left: 2px solid #000000;
+}
+
+.message-date {
+    
+}

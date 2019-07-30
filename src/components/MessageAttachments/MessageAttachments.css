@@ -1,0 +1,14 @@
+.message-attachments {
+
+}
+
+.message-attachment__sticker {
+    width: 128px;
+    height: 128px;
+    object-fit: contain;
+}
+
+.message-attachment__audio-message {
+    width: 100%;
+    max-width: 50%;
+}
