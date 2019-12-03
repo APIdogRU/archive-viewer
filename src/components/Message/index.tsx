@@ -3,70 +3,69 @@ import * as Sugar from 'sugar';
 import MessageAttachments from '../MessageAttachments';
 import MessagesList from "../MessageList";
 import { IVKMessage, IVKUser, IVKGroup } from '@apidog/vk-typings';
-import { IUserTable } from '../../typings/types';
 import 'sugar/locales/ru';
 import './Message.css';
 
 export interface IMessageProps {
-	users: IUserTable;
-	message: IVKMessage;
-	depth?: number;
+    getUser: (userId: number) => IVKUser | IVKGroup;
+    message: IVKMessage;
+    depth?: number;
 }
 
 export default class Message extends React.Component<IMessageProps> {
-	private getName = (info: IVKUser | IVKGroup) => {
-		return (info as IVKGroup).name || `${(info as IVKUser).first_name} ${(info as IVKUser).last_name}`;
-	}
+    private getName = (info: IVKUser | IVKGroup) => {
+        return (info as IVKGroup).name || `${(info as IVKUser).first_name} ${(info as IVKUser).last_name}`;
+    }
 
-	render() {
-		const { message, users, depth } = this.props;
+    render() {
+        const { message, getUser, depth } = this.props;
 
-		let user = users[message.from_id];
+        let user = getUser(message.from_id);
 
-		if (!user) {
-			user = {
-				id: 0,
-				first_name: 'unknown',
-				last_name: 'user/group',
-				screen_name: (message.from_id < 0 ? "club" : "id") + Math.abs(message.from_id)
-			} as IVKUser;
-		}
+        if (!user) {
+            user = {
+                id: 0,
+                first_name: 'unknown',
+                last_name: 'user/group',
+                screen_name: (message.from_id < 0 ? "club" : "id") + Math.abs(message.from_id)
+            } as IVKUser;
+        }
 
-		return (
-			<div className="message">
-				<div className="message-avatar">
-					<img
-						className="message-photo"
-						src={user.photo_50}
-						alt={this.getName(user)} />
-				</div>
-				<div className="message-content">
-					<div className="message-author">
-						<a
-							href={`https://apidog.ru/6.4/#${user.screen_name}`}
-							target="_blank"
-							rel="noopener noreferrer">
-							{this.getName(user)}
-						</a>
-					</div>
-					<div className="message-body">
-						<div className="message-text">{message.text}</div>
+        return (
+            <div className="message">
+                <div className="message-avatar">
+                    <img
+                        className="message-photo"
+                        src={user.photo_50}
+                        alt={this.getName(user)} />
+                </div>
+                <div className="message-content">
+                    <div className="message-author">
+                        <a
+                            href={`https://apidog.ru/6.4/#${user.screen_name}`}
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            {this.getName(user)}
+                        </a>
+                    </div>
+                    <div className="message-body">
+                        <div className="message-text">{message.text}</div>
 
-						{message.attachments && message.attachments.length && <MessageAttachments items={message.attachments} />}
-						{message.fwd_messages && message.fwd_messages.length && (
-							<div className="message-fwd_wrap">
-								<MessagesList
-									messages={message.fwd_messages}
-									users={users}
-									depth={depth + 1} />
-								</div>
-						 )}
-						<div className="message-date">
-							{message.id && `#${message.id}, `}{Sugar.Date.long(new Date(message.date * 1000), 'ru')}
-						</div>
-					</div>
-				</div>
-			</div>
-		);
-	}
+                        {message.attachments && message.attachments.length && <MessageAttachments items={message.attachments} />}
+                        {message.fwd_messages && message.fwd_messages.length && (
+                            <div className="message-fwd_wrap">
+                                <MessagesList
+                                    messages={message.fwd_messages}
+                                    getUser={getUser}
+                                    depth={depth + 1} />
+                                </div>
+                         )}
+                        <div className="message-date">
+                            {message.id && `#${message.id}, `}{Sugar.Date.long(new Date(message.date * 1000), 'ru')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }

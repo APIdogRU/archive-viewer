@@ -2,65 +2,55 @@ import * as React from 'react';
 import Message from '../Message';
 import * as Sugar from 'sugar';
 import 'sugar/locales/ru';
-import { IVKMessage } from '@apidog/vk-typings';
-import { IUserTable } from '../../typings/types';
 import './MessageList.scss';
+import { IVKUser, IVKGroup, IVKMessage } from '@apidog/vk-typings';
 
 export interface IMessageListProps {
-	messages: IVKMessage[];
-	users: IUserTable;
-	depth?: number;
-	showAllMessages?: boolean;
-	query?: string;
+    messages: IVKMessage[];
+    getUser: (userId: number) => IVKUser | IVKGroup;
+    depth?: number;
 }
 
 export default class MessageList extends React.Component<IMessageListProps> {
-	render() {
-		const { messages, users, depth, showAllMessages } = this.props;
+    render() {
+        const { messages, depth, getUser } = this.props;
 
-		const list = [];
+        const list = [];
 
-		const needOnlyWithAttachments = depth === 0 && !showAllMessages;
+        if (!messages || !messages.length) {
+            return (
+                <div className="messagelist__empty">Нет сообщений по заданному запросу</div>
+            );
+        }
 
-		if (messages && messages.length) {
-			let last: number = null;
+        let last: number = null;
+        for (const message of messages) {
+            const date = new Date(message.date * 1000);
 
-			for (const message of messages) {
-				if (needOnlyWithAttachments && (!message.attachments || !message.attachments.length)) {
-					continue;
-				}
+            if (depth === 0 && date.getDate() !== last) {
+                last = date.getDate();
+                list.push(
+                    <div
+                        key={`head${last}`}
+                        className="messagelist-subheader">
+                        {Sugar.Date.medium(date, 'ru')}
+                    </div>
+                );
+            }
 
-				const date = new Date(message.date * 1000);
+            list.push(
+                <Message
+                    key={`msg${message.id || -Math.floor(Math.random() * 100000)}`}
+                    getUser={getUser}
+                    message={message}
+                    depth={depth} />
+            );
+        }
 
-				if (depth === 0 && date.getDate() !== last) {
-					last = date.getDate();
-					list.push(
-						<div
-							key={`head${last}`}
-							className="messagelist-subheader">
-							{Sugar.Date.medium(date, 'ru')}
-						</div>
-					);
-				}
-
-				list.push(
-					<Message
-						key={`msg${message.id || -Math.floor(Math.random() * 100000)}`}
-						users={users}
-						message={message}
-						depth={depth} />
-				);
-			}
-		}
-
-		if (!list.length) {
-			const warn = needOnlyWithAttachments
-				? 'За этот период нет сообщений с прикреплениями'
-				: 'За этот период нет сообщений';
-
-			return <div className="messagelist-info">{warn}</div>;
-		}
-
-		return <div className="messagelist-list">{list}</div>;
-	}
+        return (
+            <div className="messagelist-list">
+                {list}
+            </div>
+        );
+    }
 }
