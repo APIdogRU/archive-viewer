@@ -4,6 +4,7 @@ import * as Sugar from 'sugar';
 import 'sugar/locales/ru';
 import { IVKMessage } from '@apidog/vk-typings';
 import { IUserTable } from '../../typings/types';
+import './MessageList.scss';
 
 export interface IMessageListProps {
 	messages: IVKMessage[];
@@ -39,10 +40,6 @@ export default class MessageList extends React.Component<IMessageListProps> {
 							className="messagelist-subheader">
 							{Sugar.Date.medium(date, 'ru')}
 						</div>
-					);
-				} else {
-					list.push(
-						<div key={-Math.floor(Math.random() * 100000)} />
 					);
 				}
 

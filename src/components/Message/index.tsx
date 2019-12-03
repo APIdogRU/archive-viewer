@@ -62,7 +62,7 @@ export default class Message extends React.Component<IMessageProps> {
 								</div>
 						 )}
 						<div className="message-date">
-							{message.id && `#${message.id}, `}{Sugar.Date.long(new Date(message.date), 'ru')}
+							{message.id && `#${message.id}, `}{Sugar.Date.long(new Date(message.date * 1000), 'ru')}
 						</div>
 					</div>
 				</div>

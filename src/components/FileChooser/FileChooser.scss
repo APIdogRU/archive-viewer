@@ -1,0 +1,24 @@
+.file-chooser {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 80%;
+    height: 100px;
+    
+    margin: 16px auto;
+
+    border: 2px dotted blue;
+
+    &__input {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+}

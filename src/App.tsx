@@ -5,6 +5,8 @@ import migration1to2 from './utils/migration1to2';
 import { IHashDateMessage, IUserTable } from './typings/types';
 import { IArchiveLegacyMeta, IArchiveLegacyMessage } from './typings/archive-legacy';
 import MessageList from './components/MessageList';
+import FileChooser from './components/FileChooser';
+import LoadSpinner from './components/LoadSpinner';
 
 export enum AppStage {
 	SELECT_FILE,
@@ -51,24 +53,50 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		content: null,
 	};
 
-	private generateGroups = (table: IHashDateMessage) =>
-		(Object.keys(table) as unknown as number[]).map((year: number) =>
-			(Object.keys(table[year]) as unknown as number[]).map((month: number) => (
-				<option
-					key={month}
-					value={`${year}_${month}`}>
-					{year} {App.months[month]} ({table[year][month].length})
-				</option>
-			)
-		)
-	);
+	private generateGroups = (table: IHashDateMessage) => {
+		const nodes = [];
 
-	private onChangePeriod = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		if (!event.target.value) {
-			return;
+		const years = Object.keys(table) as unknown as number[];
+		const current = `${this.state.year}_${this.state.month}`;
+
+		for (const year of years) {
+			const months = Object.keys(table[year]) as unknown as number[];
+
+			nodes.push(
+				<div
+					key={year}
+					className="viewer-period-year">
+					{year}
+				</div>
+			);
+
+			for (const month of months) {
+				const id = `${year}_${month}`;
+				let cls = ['viewer-period-item'];
+
+				if (current === id) {
+					cls.push('viewer-period-item__active');
+				}
+
+				nodes.push(
+					<div
+						key={month}
+						className={cls.join(' ')}
+						onClick={this.onChangePeriod}
+						data-count={table[year][month].length}
+						data-period={id}>
+						{App.months[month]}
+					</div>
+				);
+			}
 		}
 
-		const [y, m]: number[] = event.target.value.split('_').map(Number);
+		return nodes;
+	};
+
+	private onChangePeriod = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		const value = (event.target as HTMLDivElement).dataset.period;
+		const [y, m]: number[] = value.split('_').map(Number);
 
 		this.setState({
 			month: m,
@@ -82,8 +110,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		this.setState({ showAllMessages: event.target.checked });
 	};
 
-	async onChange(event: React.ChangeEvent<HTMLInputElement>) {
-		const file = event.target.files[0];
+	private onFileChoosed = async(file: File) => {
 
 		this.setState({
 			stage: AppStage.PARSING
@@ -168,31 +195,26 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		const { error, stage } = this.state;
 
 		if (error) {
-			return <div className="app-overlay">
-				<div className="app-paper">
-					<h4>Произошла ошибка</h4>
-					<p>{error.message}</p>
+			return (
+				<div className="app app-page__error">
+					<div className="app-paper">
+						<h1>Произошла ошибка</h1>
+						<p>{error.message}</p>
+					</div>
 				</div>
-			</div>;
+			);
 		}
 
 		switch (stage) {
 			case AppStage.SELECT_FILE: {
 				return (
-					<div className="app">
+					<div className="app app-page__select">
 						<div className="app-paper">
+							<h1>APIdog Archive Viewer</h1>
 							<p>Выберите файл архива сообщений.</p>
-							<input
-								accept="application/json"
-								className="app-input"
-								id="contained-button-file"
-								type="file"
-								onChange={this.onChange} />
-							<label
-								htmlFor="contained-button-file"
-								className="app-input__label">
-								<button className="app-input__button">Выбрать JSON файл</button>
-							</label>
+							<FileChooser
+								label="Выбрать JSON-файл"
+								onChoose={this.onFileChoosed} />
 							<p className="app-footer">APIdog &copy; {YEAR_RELEASE}<br />v{APP_VERSION}</p>
 						</div>
 					</div>
@@ -201,56 +223,55 @@ export default class App extends React.Component<IAppProps, IAppState> {
 
 			case AppStage.PARSING: {
 				return (
-					<div className="app">
-						{ /*<CircularProgress size={60} thickness={4} /> */ }
-						<div className="app-paper">Пожалуйста, подождите...</div>
+					<div className="app app-page__parsing">
+						<div className="app-paper">
+							<LoadSpinner />
+							<p>Пожалуйста, подождите...</p>
+						</div>
 					</div>
 				);
 			};
 
 			case AppStage.VIEW: {
 				return (
-					<React.Fragment>
-						<div className="viewer-list">
-							{this.state.year ? (
-								<MessageList
-									depth={0}
-									showAllMessages={this.state.showAllMessages}
-									messages={this.state.messages}
-									users={this.state.users}
-									query={this.state.query} />
-							) : (
-								<p>Выберите внизу период</p>
-							)}
-						</div>
-						<div className="app-bar">
-							<div className="app-period">
-								<select
-									value={`${this.state.year}_${this.state.month}`}
-									onChange={this.onChangePeriod}
-									name="period"
-									id="__period">
-									<option disabled value={""}>&lt; период не выбраны &gt;</option>
-									{this.generateGroups(this.state.grouped)}
-								</select>
+					<div className="app-page__view viewer">
+						<div className="viewer-content">
+							<div className="viewer-period">
+								{this.generateGroups(this.state.grouped)}
 							</div>
-							<div>
-								<label>
-									<input
-										type="checkbox"
-										checked={this.state.showAllMessages}
-										onChange={this.onChangeAllOrAttachments}
-										value="allMessages" />
-									Только с прикреплениями
-								</label>
+							<div className="viewer-list">
+								{this.state.year ? (
+									<MessageList
+										depth={0}
+										showAllMessages={this.state.showAllMessages}
+										messages={this.state.messages}
+										users={this.state.users}
+										query={this.state.query} />
+								) : (
+									<p>Выберите период</p>
+								)}
 							</div>
 						</div>
-					</React.Fragment>
+						<div className="viewer-controls">
+							<label>
+								<input
+									type="checkbox"
+									checked={this.state.showAllMessages}
+									onChange={this.onChangeAllOrAttachments}
+									value="allMessages" />
+								Только с прикреплениями
+							</label>
+						</div>
+					</div>
 				);
 			};
 
 			default: {
-				return <div>invalid stage</div>;
+				return (
+					<div className="app app-page__error">
+						<p>invalid stage</p>
+					</div>
+				);
 			};
 		}
 	}
