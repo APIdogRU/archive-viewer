@@ -159,5 +159,50 @@ $viewer-content-height: 60px;
     &-controls {
         height: $viewer-content-height;
         align-self: stretch;
+        display: flex;
+        flex-flow: row nowrap;
+    }
+}
+
+.control {
+    height: 100%;
+
+    &-input {
+        opacity: 0;
+        width: 0;
+    }
+
+    &-label {
+        position: relative;
+        padding-left: 28px;
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid black;
+        }
+
+        .control-input:checked + &::after {
+            position: absolute;
+            top: 5px;
+            left: 4px;
+
+            content: '';
+            display: block;
+
+            border: 2px solid black;
+            border-top: 0;
+            border-right: 0;
+
+            width: 13px;
+            height: 7px;
+
+            transform: rotate(-45deg);
+        }
     }
 }

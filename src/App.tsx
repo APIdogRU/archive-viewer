@@ -11,8 +11,7 @@ import { IPeriodInfo, TMessageViewFilter, IMessageViewSettings } from './typings
 export enum AppStage {
     SELECT_FILE,
     PARSING,
-    VIEW,
-    ATTACH_LIST
+    VIEW
 }
 
 const APP_VERSION = process.env.VERSION;
@@ -38,22 +37,8 @@ export default class App extends React.Component<IAppProps, IAppState> {
     };
 
     /**
-     * Текущий просматриваемый период в виде тега
+     * Обработчик событий выбора файла
      */
-    private getCurrentPeriod = () => {
-        const { year, month } = this.state.settings;
-        return `${year}_${month}`;
-    }
-
-
-    private onPeriodChanged = (period: IPeriodInfo) => {
-        const { month, year } = period;
-        this.setState((state) => {
-            const settings = { ...state.settings, month, year };
-            return { settings };
-        });
-    };
-
     private onFileChoosed = async(file: File) => {
         this.setState({ stage: AppStage.PARSING });
 
@@ -82,16 +67,68 @@ export default class App extends React.Component<IAppProps, IAppState> {
             this.setState({ error });
         }
     }
+
+    /**
+     * Текущий просматриваемый период в виде тега
+     */
+    private getCurrentPeriod = () => {
+        const { year, month } = this.state.settings;
+        return `${year}_${month}`;
+    }
+
+    /**
+     * Обработчик события изменения просматриваемого периода
+     */
+    private onPeriodChanged = (period: IPeriodInfo) => {
+        const { month, year } = period;
+        this.setState((state) => {
+            const settings = { ...state.settings, month, year };
+            return { settings };
+        });
+    };
     
+    /**
+     * Получение сообщений по периоду
+     */
     private getMessages = () => {
-        return this.state.messages.getMessagesByPeriod(
+        const messages = this.state.messages.getMessagesByPeriod(
             this.state.settings.year,
             this.state.settings.month
         );
-    }
+
+        const { settings } = this.state;
+        const query = settings.query?.toLowerCase();
+
+        return messages.filter(msg => {
+            // Требуются только с аттачами, но в сообщении нет аттачей
+            if (settings.showOnly === TMessageViewFilter.WITH_ATTACHMENTS && (!msg.attachments || !msg.attachments.length)) {
+                return false;
+            }
+
+            // Есть запрос, но запрос не содержится в тексте
+            if (settings.query && !msg.text.toLowerCase().includes(query)) {
+                return false;
+            }
+
+            return true;
+        });
+    };
+
+    private onChangeOnlyWithAttachments = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const checked = event.target.checked;
+        this.setState(state => {
+            const settings = {
+                ...state.settings,
+                showOnly: checked
+                    ? TMessageViewFilter.WITH_ATTACHMENTS
+                    : TMessageViewFilter.ALL
+            };
+            return { settings };
+        });
+    };
 
     render() {
-        const { error, stage } = this.state;
+        const { error, stage, settings, messages } = this.state;
 
         if (error) {
             return (
@@ -139,13 +176,13 @@ export default class App extends React.Component<IAppProps, IAppState> {
                                 <PeriodList
                                     onPeriodChanged={this.onPeriodChanged}
                                     selected={this.getCurrentPeriod()}
-                                    controller={this.state.messages} />
+                                    controller={messages} />
                             </div>
                             <div className="viewer-list">
-                                {this.state.settings.year ? (
+                                {settings.year ? (
                                     <MessageList
                                         messages={this.getMessages()}
-                                        getUser={this.state.messages.getUserById}
+                                        getUser={messages.getUserById}
                                         depth={0} />
                                 ) : (
                                     <p>Выберите период</p>
@@ -153,14 +190,14 @@ export default class App extends React.Component<IAppProps, IAppState> {
                             </div>
                         </div>
                         <div className="viewer-controls">
-                            { /*<label>
+                            <label className="control">
                                 <input
                                     type="checkbox"
-                                    checked={this.state.showAllMessages}
-                                    onChange={this.onChangeAllOrAttachments}
-                                    value="allMessages" />
-                                Только с прикреплениями
-                            </label> */ }
+                                    className="control-input"
+                                    checked={settings.showOnly === TMessageViewFilter.WITH_ATTACHMENTS}
+                                    onChange={this.onChangeOnlyWithAttachments} />
+                                <span className="control-label">Только с прикреплениями</span>
+                            </label>
                         </div>
                     </div>
                 );
