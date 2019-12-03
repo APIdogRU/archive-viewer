@@ -3,7 +3,6 @@ import { IVKMessage, IVKUser } from '@apidog/vk-typings';
 import ArchiveFile from './utils/ArchiveFile';
 import migration1to2 from './utils/migration1to2';
 import { IHashDateMessage, IUserTable } from './typings/types';
-import { IArchiveLegacyMeta, IArchiveLegacyMessage } from './typings/archive-legacy';
 import MessageList from './components/MessageList';
 import FileChooser from './components/FileChooser';
 import LoadSpinner from './components/LoadSpinner';
@@ -111,7 +110,6 @@ export default class App extends React.Component<IAppProps, IAppState> {
 	};
 
 	private onFileChoosed = async(file: File) => {
-
 		this.setState({
 			stage: AppStage.PARSING
 		});
@@ -121,50 +119,49 @@ export default class App extends React.Component<IAppProps, IAppState> {
 		const af = new ArchiveFile(file);
 		try {
 			await af.read();
+		
+			if (af.meta.v < '2.0') {
+				console.log(`Detected deprecated version ${af.meta.v}. Trying to convert`);
+
+				af.process(migration1to2);
+
+				console.log('Converted to 2.0');
+			}
+
+			const rawUsers = await af.fetchUserInfo();
+
+			const users = rawUsers.reduce((users: IUserTable, user: IVKUser) => {
+				users[user.id] = user;
+				return users;
+			}, {});
+
+			const fixMessages = (message: IVKMessage) => {
+				if (message.reply_message) {
+					(message.fwd_messages || (message.fwd_messages = [])).unshift(message.reply_message);
+				}
+
+				if (message.fwd_messages) {
+					message.fwd_messages = message.fwd_messages.map(fixMessages);
+				}
+
+				return message;
+			};
+
+			const messages = af.data.map(fixMessages);
+
+			this.setState({
+				stage: AppStage.VIEW,
+				users,
+				all: messages,
+				messages: [],
+				grouped: this.groupBy(messages)
+			});
 		} catch (e) {
 			this.setState({
 				error: e
 			});
 			return;
 		}
-
-		if (af.getMeta().v < '2.0') {
-			console.log(`Detected deprecated version ${af.getMeta().v}. Trying to convert`);
-			await migration1to2({
-				meta: af.getMeta() as unknown as IArchiveLegacyMeta,
-				data: af.getData() as unknown as IArchiveLegacyMessage[]
-			});
-			console.log('Converted to 2.0');
-		}
-
-		const rawUsers = await af.fetchUserInfo();
-
-		const users = rawUsers.reduce((users: IUserTable, user: IVKUser) => {
-			users[user.id] = user;
-			return users;
-		}, {});
-
-		const fixMessages = (message: IVKMessage) => {
-			if (message.reply_message) {
-				(message.fwd_messages || (message.fwd_messages = [])).unshift(message.reply_message);
-			}
-
-			if (message.fwd_messages) {
-				message.fwd_messages = message.fwd_messages.map(fixMessages);
-			}
-
-			return message;
-		};
-
-		const messages = af.getData().map(fixMessages);
-
-		this.setState({
-			stage: AppStage.VIEW,
-			users,
-			all: messages,
-			messages: [],
-			grouped: this.groupBy(messages)
-		});
 	}
 
 	private groupBy = (messages: IVKMessage[]): IHashDateMessage => {

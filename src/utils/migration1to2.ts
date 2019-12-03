@@ -1,12 +1,11 @@
 import { IVKAttachment } from '@apidog/vk-typings';
-import { IArchiveMeta } from '../typings/types';
+import { IArchiveMeta, IArchiveRoot, IArchiveData } from '../typings/types';
 import {
 	IArchiveLegacyMeta,
 	IArchiveLegacyAttachment,
 	IArchiveLegacy,
 	IArchiveLegacyMessage
 } from '../typings/archive-legacy';
-import ArchiveFile from './ArchiveFile';
 
 // Базовая дата для версии v1
 const d2006 = 1138741200;
@@ -111,8 +110,8 @@ const convertMessage = (meta: IArchiveMeta, message: IArchiveLegacyMessage) => {
 	};
 };
 
-export default async(archive: IArchiveLegacy) => {
-	const meta = convertMeta(archive.meta);
-	const data = archive.data.map(convertMessage.bind(null, meta));
+export default (archive: IArchiveLegacy): IArchiveRoot => {
+	const meta: IArchiveMeta = convertMeta(archive.meta);
+	const data: IArchiveData = archive.data.map(convertMessage.bind(null, meta));
 	return { meta, data };
 };

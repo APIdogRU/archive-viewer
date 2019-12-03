@@ -1,14 +1,15 @@
 import { IVKUser, IVKMessage } from '@apidog/vk-typings';
 import { Array as SArray } from 'sugar';
 import { stringify } from 'querystring';
-import { IArchiveRoot, IArchiveMeta } from '../typings/types';
+import { IArchiveRoot, IArchiveMeta, IArchiveData } from '../typings/types';
+import { IArchiveLegacy } from '../typings/archive-legacy';
 
 export default class ArchiveFile {
-	private readonly file?: File;
-	private content?: IArchiveRoot;
+	private readonly mFile?: File;
+	private mRoot?: IArchiveRoot;
 
 	constructor(file: File) {
-		this.file = file;
+		this.mFile = file;
 	}
 
 	public read = async(): Promise<void> => new Promise((resolve, reject) => {
@@ -19,7 +20,7 @@ export default class ArchiveFile {
 			const json: IArchiveRoot = JSON.parse(text);
 			console.log('Read complete successfully');
 
-			this.content = json;
+			this.mRoot = json;
 
 			if (!(json.meta && json.meta.v && json.data && Array.isArray(json.data))) {
 				reject({ message: 'Неизвестный формат архива.' });
@@ -31,28 +32,45 @@ export default class ArchiveFile {
 
 		reader.onerror = error => reject(error);
 
-		reader.readAsText(this.file);
+		reader.readAsText(this.mFile);
 		console.log('Reading file...');
 	});
 
-	public getMeta = () => {
-		if (!this.content) {
+	/**
+	 * Обработка данных архива функцией
+	 * Например, для конвертации из старого формата
+	 */
+	public process = (handler: (input: IArchiveRoot | IArchiveLegacy) => IArchiveRoot) => {
+		this.mRoot = handler(this.mRoot);
+		return this.mRoot;
+	}
+
+	public get root(): IArchiveRoot {
+		if (!this.mRoot) {
 			throw new Error('Not parsed');
 		}
 
-		return this.content.meta;
-	};
+		return this.mRoot;
+	}
 
-	public getData = () => {
-		if (!this.content) {
+	public get meta(): IArchiveMeta {
+		if (!this.mRoot) {
 			throw new Error('Not parsed');
 		}
 
-		return this.content.data;
+		return this.mRoot.meta;
+	}
+
+	public get data(): IArchiveData {
+		if (!this.mRoot) {
+			throw new Error('Not parsed');
+		}
+
+		return this.mRoot.data;
 	};
 
 	public fetchUserInfo = async(): Promise<IVKUser[]> => {
-		if (!this.content) {
+		if (!this.mRoot) {
 			throw new Error('Not parsed');
 		}
 
@@ -60,7 +78,6 @@ export default class ArchiveFile {
 
 		const collectUsers = (userIds: Set<number>, message: IVKMessage) => {
 			userIds.add(message.from_id);
-
 			if (message.fwd_messages) {
 				message.fwd_messages.reduce(collectUsers, userIds);
 			}
@@ -68,7 +85,7 @@ export default class ArchiveFile {
 			return userIds;
 		};
 
-		const userIds = this.content.data.reduce(collectUsers, new Set());
+		const userIds = this.mRoot.data.reduce(collectUsers, new Set());
 
 		const s = SArray.inGroupsOf(Array.from(userIds), 100) as unknown as number[][];
 		const groups = s.map((a: number[]) => SArray.compact(a));
