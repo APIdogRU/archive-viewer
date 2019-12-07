@@ -1,7 +1,7 @@
 import * as React from 'react';
 import LinkCard from '../LinkCard';
 import * as Sugar from 'sugar';
-import { 
+import {
     IVKAttachmentList,
     IVKSticker,
     IVKVideo,
@@ -21,7 +21,7 @@ import {
     mdiFileDocumentBox,
     mdiLink
 } from '@mdi/js';
-import './MessageAttachments.css';
+import './MessageAttachments.scss';
 
 export interface IMessageAttachmentsProps {
     items: IVKAttachmentList;
@@ -33,7 +33,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
             <React.Fragment>
                 {this.props.items.map((item, i) => {
                     const { type } = item;
-                    
+
                     let node = null;
 
                     switch (type as keyof IVKSupportedAttachments | 'audio_message' | 'graffiti') {

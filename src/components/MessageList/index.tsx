@@ -15,6 +15,8 @@ export default class MessageList extends React.Component<IMessageListProps> {
     render() {
         const { messages, depth, getUser } = this.props;
 
+        messages.reverse();
+
         const list = [];
 
         if (!messages || !messages.length) {

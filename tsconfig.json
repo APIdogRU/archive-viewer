@@ -3,6 +3,8 @@
 		"outDir": "./build/",
 		"noImplicitAny": true,
 		"module": "commonjs",
+		"declaration": true,
+		"declarationDir": "./build",
 		"target": "es6",
 		"jsx": "react",
 		"allowJs": true

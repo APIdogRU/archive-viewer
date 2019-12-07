@@ -4,7 +4,7 @@ import MessageAttachments from '../MessageAttachments';
 import MessagesList from "../MessageList";
 import { IVKMessage, IVKUser, IVKGroup } from '@apidog/vk-typings';
 import 'sugar/locales/ru';
-import './Message.css';
+import './Message.scss';
 
 export interface IMessageProps {
     getUser: (userId: number) => IVKUser | IVKGroup;
