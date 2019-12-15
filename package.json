@@ -3,8 +3,6 @@
 	"version": "0.2.0",
 	"main": "./src/index.ts",
 	"dependencies": {
-		"@mdi/js": "4.6.95",
-		"@mdi/react": "1.2.1",
 		"react": "16.12.0",
 		"react-dom": "16.12.0",
 		"sugar": "2.0.6"
