@@ -51,8 +51,8 @@ export default class Message extends React.Component<IMessageProps> {
                     <div className="message-body">
                         <div className="message-text">{message.text}</div>
 
-                        {message.attachments && message.attachments.length && <MessageAttachments items={message.attachments} />}
-                        {message.fwd_messages && message.fwd_messages.length && (
+                        {message.attachments && message.attachments.length > 0 && <MessageAttachments items={message.attachments} />}
+                        {message.fwd_messages && message.fwd_messages.length > 0 && (
                             <div className="message-fwd_wrap">
                                 <MessagesList
                                     messages={message.fwd_messages}
