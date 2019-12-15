@@ -1,7 +1,8 @@
 {
 	"name": "@apidog/archive-viewer",
 	"version": "0.2.0",
-	"main": "./src/index.ts",
+	"main": "./src/index.js",
+	"types": "./dist/index.d.ts",
 	"dependencies": {
 		"react": "16.12.0",
 		"react-dom": "16.12.0",
@@ -26,23 +27,11 @@
 	},
 	"homepage": "https://apidog.ru/archive-viewer/",
 	"scripts": {
-		"start": "webpack-dev-server --config ./config/webpack.config.js --open",
-		"build": "webpack --config ./config/webpack.config.js",
-		"test": "jest"
+		"start": "webpack-dev-server --config ./.config/webpack.config.js --open",
+		"build": "webpack --config ./.config/webpack.config.js",
+		"test": "echo \"No tests\""
 	},
 	"eslintConfig": {
 		"extends": "react-app"
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
 	}
 }
