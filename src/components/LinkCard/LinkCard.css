@@ -1,13 +1,13 @@
 .card {
     display: inline-flex;
     flex-flow: row nowrap;
-    padding: .5em 1.5em;
+    padding: 4px 6px;;
     align-items: center;
 }
 
 .card-title {
     flex: 1 0 auto;
-    padding: 0 1em;
+    padding: 0 8px;
 }
 
 .card-aside {

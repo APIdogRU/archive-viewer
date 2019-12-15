@@ -14,14 +14,8 @@ import {
     IVKDocument,
     IVKPhoto
 } from '@apidog/vk-typings';
-import {
-    mdiVideo,
-    mdiMusic,
-    mdiWall,
-    mdiFileDocumentBox,
-    mdiLink
-} from '@mdi/js';
 import './MessageAttachments.scss';
+import { iconVideo, iconMusic, iconWall, iconDocument, iconLink } from '../../icons';
 
 export interface IMessageAttachmentsProps {
     items: IVKAttachmentList;
@@ -58,7 +52,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                             node = (
                                 <LinkCard
                                     href={`video${video.owner_id}_${video.id}`}
-                                    icon={mdiVideo}
+                                    icon={iconVideo}
                                     title={`Видеозапись «${video.title}»`} />
                             );
                             break;
@@ -69,7 +63,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                             node = (
                                 <LinkCard
                                     href={`audio${audio.owner_id}_${audio.id}`}
-                                    icon={mdiMusic}
+                                    icon={iconMusic}
                                     title={`Аудиозапись «${audio.artist} - ${audio.title}»`} />
                             );
                             break;
@@ -91,7 +85,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                             node = (
                                 <LinkCard
                                     href={`wall${post.owner_id || post.to_id || post.from_id}_${post.id}`}
-                                    icon={mdiWall}
+                                    icon={iconWall}
                                     title={`Запись на стене «${Sugar.String.truncateOnWord(post.text, 60, null, '...')}»`} />
                             );
                             break;
@@ -102,7 +96,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                             node = (
                                 <LinkCard
                                     href={`doc${doc.owner_id}_${doc.id}`}
-                                    icon={mdiFileDocumentBox}
+                                    icon={iconDocument}
                                     title={`Документ «${doc.title}»`} />
                             );
                             break;
@@ -113,7 +107,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                             node = (
                                 <LinkCard
                                     href={`~${link.url}`}
-                                    icon={mdiLink}
+                                    icon={iconLink}
                                     title={`Ссылка «${link.title}»`} />
                             );
                             break;
