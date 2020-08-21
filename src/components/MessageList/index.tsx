@@ -3,11 +3,11 @@ import Message from '../Message';
 import * as Sugar from 'sugar';
 import 'sugar/locales/ru';
 import './MessageList.scss';
-import { IVKUser, IVKGroup, IVKMessage } from '@apidog/vk-typings';
+import { IAccount, IUser, IGroup, IMessage } from '@apidog/vk-typings';
 
 export interface IMessageListProps {
-    messages: IVKMessage[];
-    getUser: (userId: number) => IVKUser | IVKGroup;
+    messages: IMessage[];
+    getUser: (userId: number) => IAccount;
     depth?: number;
 }
 

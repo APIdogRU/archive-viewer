@@ -2,19 +2,19 @@ import * as React from 'react';
 import * as Sugar from 'sugar';
 import MessageAttachments from '../MessageAttachments';
 import MessagesList from "../MessageList";
-import { IVKMessage, IVKUser, IVKGroup } from '@apidog/vk-typings';
+import { IMessage, IAccount, IUser, IGroup } from '@apidog/vk-typings';
 import 'sugar/locales/ru';
 import './Message.scss';
 
 export interface IMessageProps {
-    getUser: (userId: number) => IVKUser | IVKGroup;
-    message: IVKMessage;
+    getUser: (userId: number) => IAccount;
+    message: IMessage;
     depth?: number;
 }
 
 export default class Message extends React.Component<IMessageProps> {
-    private getName = (info: IVKUser | IVKGroup) => {
-        return (info as IVKGroup).name || `${(info as IVKUser).first_name} ${(info as IVKUser).last_name}`;
+    private getName = (info: IAccount) => {
+        return (info as IGroup).name || `${(info as IUser).first_name} ${(info as IUser).last_name}`;
     }
 
     render() {
@@ -28,7 +28,7 @@ export default class Message extends React.Component<IMessageProps> {
                 first_name: 'unknown',
                 last_name: 'user/group',
                 screen_name: (message.from_id < 0 ? "club" : "id") + Math.abs(message.from_id)
-            } as IVKUser;
+            } as IUser;
         }
 
         return (
@@ -42,7 +42,7 @@ export default class Message extends React.Component<IMessageProps> {
                 <div className="message-content">
                     <div className="message-author">
                         <a
-                            href={`https://apidog.ru/6.4/#${user.screen_name}`}
+                            href={`https://apidog.ru/6.6/#${user.screen_name}`}
                             target="_blank"
                             rel="noopener noreferrer">
                             {this.getName(user)}
@@ -61,7 +61,7 @@ export default class Message extends React.Component<IMessageProps> {
                                 </div>
                          )}
                         <div className="message-date">
-                            {message.id && `#${message.id}, `}{Sugar.Date.long(new Date(message.date * 1000), 'ru')}
+                            {message.id ? `#${message.id}, ` : ''}{Sugar.Date.long(new Date(message.date * 1000), 'ru')}
                         </div>
                     </div>
                 </div>

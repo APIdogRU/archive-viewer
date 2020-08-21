@@ -1,4 +1,4 @@
-import { IVKMessage, IVKUser, IVKGroup } from '@apidog/vk-typings';
+import { IMessage, IAccount } from '@apidog/vk-typings';
 
 export interface IArchiveRoot {
     meta: IArchiveMeta;
@@ -16,11 +16,11 @@ export interface IArchiveMeta {
     d: number;
 }
 
-export type IArchiveData = IVKMessage[];
+export type IArchiveData = IMessage[];
 
 export type IHash<T> = Record<number, T>;
 
-export type IUserTable = IHash<IVKUser | IVKGroup>;
+export type IUserTable = IHash<IAccount>;
 
 /**
  * Тип информации о периоде

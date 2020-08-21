@@ -2,23 +2,21 @@ import * as React from 'react';
 import LinkCard from '../LinkCard';
 import * as Sugar from 'sugar';
 import {
-    IVKAttachmentList,
-    IVKSticker,
-    IVKVideo,
-    IVKAudio,
-    IVKSupportedAttachments,
-    IVKDocumentPreviewAudioMessage,
-    IVKDocumentPreview,
-    IVKWall,
-    IVKLink,
-    IVKDocument,
-    IVKPhoto
+    IAttachmentList,
+    ISticker,
+    IVideo,
+    IAudio,
+    IDocumentPreviewAudioMessage,
+    IWall,
+    ILink,
+    IDocument,
+    IPhoto
 } from '@apidog/vk-typings';
 import './MessageAttachments.scss';
 import { iconVideo, iconMusic, iconWall, iconDocument, iconLink } from '../../icons';
 
 export interface IMessageAttachmentsProps {
-    items: IVKAttachmentList;
+    items: IAttachmentList;
 }
 
 export default class MessageAttachments extends React.Component<IMessageAttachmentsProps> {
@@ -30,9 +28,9 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
 
                     let node = null;
 
-                    switch (type as keyof IVKSupportedAttachments | 'audio_message' | 'graffiti') {
+                    switch (type) {
                         case 'sticker': {
-                            const sticker = item.sticker as IVKSticker;
+                            const sticker = item.sticker as ISticker;
                             const best = sticker.images.reduce((best, current) => {
                                 const currentSize = Math.max(current.width, current.height);
                                 const bestSize = Math.max(best.width, best.height);
@@ -48,7 +46,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'video': {
-                            const video = item.video as IVKVideo;
+                            const video = item.video as IVideo;
                             node = (
                                 <LinkCard
                                     href={`video${video.owner_id}_${video.id}`}
@@ -59,7 +57,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'audio': {
-                            const audio = item.audio as IVKAudio;
+                            const audio = item.audio as IAudio;
                             node = (
                                 <LinkCard
                                     href={`audio${audio.owner_id}_${audio.id}`}
@@ -70,7 +68,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'audio_message': {
-                            const voice = (item as IVKDocumentPreview).audio_message as IVKDocumentPreviewAudioMessage;
+                            const voice = item.audio_message as IDocumentPreviewAudioMessage;
                             node = (
                                 <audio controls className="message-attachment__audio-message">
                                     <source src={voice.link_mp3} />
@@ -81,7 +79,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'wall': {
-                            const post = item.wall as IVKWall & { to_id: number };
+                            const post = item.wall as IWall & { to_id: number };
                             node = (
                                 <LinkCard
                                     href={`wall${post.owner_id || post.to_id || post.from_id}_${post.id}`}
@@ -92,7 +90,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'doc': {
-                            const doc = item.doc as IVKDocument;
+                            const doc = item.doc as IDocument;
                             node = (
                                 <LinkCard
                                     href={`doc${doc.owner_id}_${doc.id}`}
@@ -103,7 +101,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'link': {
-                            const link = item.link as IVKLink;
+                            const link = item.link as ILink;
                             node = (
                                 <LinkCard
                                     href={`~${link.url}`}
@@ -114,7 +112,7 @@ export default class MessageAttachments extends React.Component<IMessageAttachme
                         };
 
                         case 'photo': {
-                            const photo = item.photo as IVKPhoto & { src_max: string, src_thumb: string };
+                            const photo = item.photo as IPhoto & { src_max: string, src_thumb: string };
                             node = (
                                 <a
                                     href={photo.src_max}
