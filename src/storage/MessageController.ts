@@ -1,29 +1,24 @@
 import { Array as SArray } from 'sugar';
 import { stringify } from 'querystring';
-import { IVKMessage, IVKUser, IVKGroup } from '@apidog/vk-typings';
+import { IMessage, IAccount, IUser, IGroup } from '@apidog/vk-typings';
 import { IArchiveRoot, IUserTable, IPeriodInfo } from '../typings/types';
 
 /**
- * Тип объекта с юзерами и группами
+ *
  */
-export type IVKUserGroup = IVKUser | IVKGroup;
-
-/**
- * 
- */
-export type IPeriodMessageStorage = Record<number, Record<number, IVKMessage[]>>;
+export type IPeriodMessageStorage = Record<number, Record<number, IMessage[]>>;
 
 
 export default class MessageController {
     /**
      * Все сообщения
      */
-    private messages: IVKMessage[];
+    private messages: IMessage[];
 
     /**
      * Информация о пользователях и группах
      */
-    private users: Record<number, IVKUserGroup>;
+    private users: Record<number, IAccount>;
 
     /**
      * Сгруппированные сообщения
@@ -36,7 +31,7 @@ export default class MessageController {
     public readFromArchive = async(archive: IArchiveRoot) => {
         const rawUsers = await this.fetchUserInfo(archive);
 
-        this.users = rawUsers.reduce((users: IUserTable, user: IVKUser) => {
+        this.users = rawUsers.reduce((users: IUserTable, user: IUser) => {
             users[user.id] = user;
             return users;
         }, {});
@@ -51,7 +46,7 @@ export default class MessageController {
      * reply_to_message -> fwd_messages[] (новые ответы как в Telegram, ничего своего придумать не могут)
      * fwd_messages -> fwd_messages (рекурсивно обработать остальные сообщения)
      */
-    private fixMessages = (message: IVKMessage) => {
+    private fixMessages = (message: IMessage) => {
         if (message.reply_message) {
             (message.fwd_messages || (message.fwd_messages = [])).unshift(message.reply_message);
         }
@@ -66,12 +61,12 @@ export default class MessageController {
     /**
      * Запрос инфы о пользователях и группах по ID
      */
-    public fetchUserInfo = async(archive: IArchiveRoot): Promise<IVKUserGroup[]> => {
+    public fetchUserInfo = async(archive: IArchiveRoot): Promise<IAccount[]> => {
         console.log('Fetching users info');
-        
-        const collectUsers = (userIds: Set<number>, message: IVKMessage) => {
+
+        const collectUsers = (userIds: Set<number>, message: IMessage) => {
             userIds.add(message.from_id);
-            
+
             if (message.fwd_messages) {
                 message.fwd_messages.reduce(collectUsers, userIds);
             }
@@ -84,8 +79,8 @@ export default class MessageController {
         const s = SArray.inGroupsOf(Array.from(userIds), 100) as unknown as number[][];
         const groups = s.map((a: number[]) => SArray.compact(a));
 
-        let result: IVKUserGroup[] = [];
-        
+        let result: IAccount[] = [];
+
         for (let i = 0; i < groups.length; ++i) {
             const userIds = groups[i].join(',');
             const res = await fetch('https://apidog.ru/archive-viewer/getUsers.php', {
@@ -95,8 +90,8 @@ export default class MessageController {
                 },
                 body: stringify({ userIds })
             });
-            
-            const { response }: { response: IVKUserGroup[] } = await res.json();
+
+            const { response }: { response: IAccount[] } = await res.json();
 
             result = result.concat(response);
         }
@@ -105,14 +100,14 @@ export default class MessageController {
 
         return result;
     };
-    
+
     /**
      * Разделение всех сообщений по группам-периодам
      */
     private groupByPeriods = () => {
         const years: IPeriodMessageStorage = {};
 
-        const add = (message: IVKMessage) => {
+        const add = (message: IMessage) => {
             const date = new Date(message.date * 1000);
             const y = date.getFullYear();
             const m = date.getMonth();
@@ -135,12 +130,12 @@ export default class MessageController {
     /**
      * Получение пользователя/группы по ID
      */
-    public getUserById = (userId: number): IVKUserGroup => this.users[userId];
+    public getUserById = (userId: number): IAccount => this.users[userId];
 
     /**
      * Получение списка сообщений по периоду
      */
-    public getMessagesByPeriod = (year: number, month: number): IVKMessage[] => this.messagesGrouped[year][month];
+    public getMessagesByPeriod = (year: number, month: number): IMessage[] => this.messagesGrouped[year][month];
 
     /**
      * Получение информации о периодах в удобном формате

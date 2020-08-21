@@ -1,4 +1,4 @@
-import { IVKAttachment } from '@apidog/vk-typings';
+import { IAttachment } from '@apidog/vk-typings';
 import { IArchiveMeta, IArchiveRoot, IArchiveData } from '../typings/types';
 import {
     IArchiveLegacyMeta,
@@ -24,7 +24,7 @@ const convertMeta = (meta: IArchiveLegacyMeta): IArchiveMeta => {
     }
 };
 
-const convertAttachment = (attach: IArchiveLegacyAttachment): IVKAttachment<any> => {
+const convertAttachment = (attach: IArchiveLegacyAttachment): IAttachment<any> => {
     let type = null;
     let res = null;
     switch (attach.t) {

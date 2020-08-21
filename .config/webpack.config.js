@@ -32,10 +32,11 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.EnvironmentPlugin({
-			VERSION: process.env.npm_package_version
+			VERSION: process.env.npm_package_version,
 		}),
 		new HtmlWebpackPlugin({
-			template: path.resolve('public', 'index.html')
-		})
-	]
+			template: path.resolve('public', 'index.html'),
+		}),
+	],
+	stats: 'errors-only',
 };
