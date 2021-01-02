@@ -1,11 +1,11 @@
-import { IArchiveRoot, IArchiveMeta, IArchiveData } from '../typings/types';
+import { IArchiveMeta, IArchiveRoot } from '../typings/types';
 import { IArchiveLegacy } from '../typings/archive-legacy';
 
 export default class ArchiveFile {
     private readonly mFile?: File;
     private mRoot?: IArchiveRoot;
 
-    constructor(file: File) {
+    public constructor(file: File) {
         this.mFile = file;
     }
 
@@ -57,12 +57,4 @@ export default class ArchiveFile {
 
         return this.mRoot.meta;
     }
-
-    public get data(): IArchiveData {
-        if (!this.mRoot) {
-            throw new Error('Not parsed');
-        }
-
-        return this.mRoot.data;
-    };
 }

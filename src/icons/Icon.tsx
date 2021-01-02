@@ -1,19 +1,15 @@
 import * as React from 'react';
 import './style.scss';
 
-export interface IIconProps {
+export type IIconProps = {
     icon: string;
-}
+};
 
-export class Icon extends React.Component<IIconProps> {
-    render() {
-        return (
-            <svg
-                className="mdicon"
-                viewBox="0 0 24 24"
-                role="presentation">
-                <path d={this.props.icon} />
-            </svg>
-        );
-    }
-}
+export const Icon: React.FC<IIconProps> = (props: IIconProps) => (
+    <svg
+        className='mdicon'
+        viewBox='0 0 24 24'
+        role='presentation'>
+        <path d={props.icon} />
+    </svg>
+);

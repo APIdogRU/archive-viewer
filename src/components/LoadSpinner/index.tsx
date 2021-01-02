@@ -2,9 +2,9 @@ import * as React from 'react';
 import './LoadSpinner.scss';
 
 
-const LoadSpinner = () => (
+const LoadSpinner: React.FC = () => (
     <div className="load-spinner">
-        <div className="load-spinner__round"></div>
+        <div className="load-spinner__round" />
     </div>
 );
 

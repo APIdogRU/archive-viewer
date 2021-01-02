@@ -1,13 +1,9 @@
 import { Array as SArray } from 'sugar';
 import { stringify } from 'querystring';
-import { IMessage, IAccount, IUser, IGroup } from '@apidog/vk-typings';
-import { IArchiveRoot, IUserTable, IPeriodInfo } from '../typings/types';
+import { IAccount, IMessage, IUser } from '@apidog/vk-typings';
+import { IArchiveRoot, IPeriodInfo, IUserTable } from '../typings/types';
 
-/**
- *
- */
 export type IPeriodMessageStorage = Record<number, Record<number, IMessage[]>>;
-
 
 export default class MessageController {
     /**
@@ -142,14 +138,14 @@ export default class MessageController {
      */
     public getPeriods = (): IPeriodInfo[] => {
         const result: IPeriodInfo[] = [];
-        const years = Object.keys(this.messagesGrouped) as unknown as number[];
+        const years = Object.keys(this.messagesGrouped);
 
 		for (const year of years) {
-            const months = Object.keys(this.messagesGrouped[year]) as unknown as number[];
+            const months = Object.keys(this.messagesGrouped[+year]);
 
             months.forEach(month => {
-                const count = this.messagesGrouped[year][month].length;
-                result.push({ year, month, count });
+                const count = this.messagesGrouped[+year][+month].length;
+                result.push({ year: +year, month: +month, count });
             });
         }
 

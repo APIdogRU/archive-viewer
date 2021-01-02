@@ -15,7 +15,7 @@ export enum AppStage {
 }
 
 const APP_VERSION = process.env.VERSION;
-const YEAR_RELEASE = 2019;
+const YEAR_RELEASE = process.env.YEAR;
 
 export type IAppProps = {};
 
@@ -39,7 +39,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
     /**
      * Обработчик событий выбора файла
      */
-    private onFileChoosed = async(file: File) => {
+    private onFileChosen = async(file: File) => {
         this.setState({ stage: AppStage.PARSING });
 
         console.log('Loading file...');
@@ -56,12 +56,12 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 console.log('Converted to 2.0');
             }
 
-            const msgctl = new MessageController();
-            await msgctl.readFromArchive(af.root);
+            const msgCtl = new MessageController();
+            await msgCtl.readFromArchive(af.root);
 
             this.setState({
                 stage: AppStage.VIEW,
-                messages: msgctl
+                messages: msgCtl
             });
         } catch (error) {
             this.setState({ error });
@@ -106,12 +106,13 @@ export default class App extends React.Component<IAppProps, IAppState> {
             }
 
             // Есть запрос, но запрос не содержится в тексте
+            // noinspection RedundantIfStatementJS
             if (settings.query && !msg.text.toLowerCase().includes(query)) {
                 return false;
             }
 
             return true;
-        });
+        }).reverse();
     };
 
     private onChangeOnlyWithAttachments = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +128,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
         });
     };
 
-    render() {
+    public render() {
         const { error, stage, settings, messages } = this.state;
 
         if (error) {
@@ -150,12 +151,12 @@ export default class App extends React.Component<IAppProps, IAppState> {
                             <p>Выберите файл архива сообщений.</p>
                             <FileChooser
                                 label="Выбрать JSON-файл"
-                                onChoose={this.onFileChoosed} />
+                                onChoose={this.onFileChosen} />
                             <p className="app-footer">APIdog &copy; {YEAR_RELEASE}<br />v{APP_VERSION}</p>
                         </div>
                     </div>
                 );
-            };
+            }
 
             case AppStage.PARSING: {
                 return (
@@ -166,7 +167,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                         </div>
                     </div>
                 );
-            };
+            }
 
             case AppStage.VIEW: {
                 return (
@@ -201,7 +202,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                         </div>
                     </div>
                 );
-            };
+            }
 
             default: {
                 return (
@@ -209,7 +210,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                         <p>invalid stage</p>
                     </div>
                 );
-            };
+            }
         }
     }
 }

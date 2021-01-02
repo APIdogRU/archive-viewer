@@ -33,6 +33,7 @@ module.exports = {
 	plugins: [
 		new webpack.EnvironmentPlugin({
 			VERSION: process.env.npm_package_version,
+			YEAR: String(new Date().getFullYear()),
 		}),
 		new HtmlWebpackPlugin({
 			template: path.resolve('public', 'index.html'),
