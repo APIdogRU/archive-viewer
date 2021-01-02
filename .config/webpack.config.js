@@ -2,8 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
-	mode: 'development',
+	mode: isProduction ? 'production' : 'development',
 	entry: {
 		main: path.resolve('src', 'index.tsx'),
 	},
