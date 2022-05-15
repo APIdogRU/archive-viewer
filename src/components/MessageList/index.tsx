@@ -1,9 +1,11 @@
 import * as React from 'react';
-import Message from '../Message';
+import type { IAccount, IMessage } from '@apidog/vk-typings';
 import * as Sugar from 'sugar';
 import 'sugar/locales/ru';
+
+import Message from '@components/Message';
+
 import './MessageList.scss';
-import { IAccount, IMessage } from '@apidog/vk-typings';
 
 export type IMessageListProps = {
     messages: IMessage[];

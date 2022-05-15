@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import './FileChooser.scss';
 
 export type IFileChooserDone = (file: File) => any;

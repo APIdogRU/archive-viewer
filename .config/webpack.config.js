@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -14,7 +15,7 @@ module.exports = {
 		filename: '[name].bundle.js',
 	},
 	devServer: {
-		contentBase: path.resolve('dist'),
+		static: path.resolve('dist'),
 	},
 	module: {
 		rules: [
@@ -30,7 +31,14 @@ module.exports = {
 		],
 	},
 	resolve: {
-		extensions: [ '.tsx', '.ts', '.js' ],
+		extensions: ['.tsx', '.ts', '.js'],
+		fallback: {
+			querystring: false,
+		},
+		plugins: [
+            // Pulls the paths from tsconfig.json to resolve.alias
+            new TsconfigPathsPlugin(),
+        ],
 	},
 	plugins: [
 		new webpack.EnvironmentPlugin({

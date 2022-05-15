@@ -1,7 +1,6 @@
 import * as React from 'react';
-import LinkCard from '../LinkCard';
 import * as Sugar from 'sugar';
-import {
+import type {
     IAttachmentList,
     ISticker,
     IVideo,
@@ -12,8 +11,11 @@ import {
     IDocument,
     IPhoto
 } from '@apidog/vk-typings';
+
+import LinkCard from '@components/LinkCard';
+import { iconVideo, iconMusic, iconWall, iconDocument, iconLink } from '@icons';
+
 import './MessageAttachments.scss';
-import { iconVideo, iconMusic, iconWall, iconDocument, iconLink } from '../../icons';
 
 export type IMessageAttachmentsProps = {
     items: IAttachmentList;

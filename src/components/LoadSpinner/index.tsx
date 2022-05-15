@@ -1,6 +1,6 @@
 import * as React from 'react';
-import './LoadSpinner.scss';
 
+import './LoadSpinner.scss';
 
 const LoadSpinner: React.FC = () => (
     <div className="load-spinner">

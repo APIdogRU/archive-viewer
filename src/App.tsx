@@ -1,12 +1,12 @@
 import * as React from 'react';
-import ArchiveFile from './utils/ArchiveFile';
-import migration1to2 from './utils/migration1to2';
-import MessageList from './components/MessageList';
-import FileChooser from './components/FileChooser';
-import LoadSpinner from './components/LoadSpinner';
+import ArchiveFile from '@utils/ArchiveFile';
+import migration1to2 from '@utils/migration1to2';
+import MessageList from '@components/MessageList';
+import FileChooser from '@components/FileChooser';
+import LoadSpinner from '@components/LoadSpinner';
+import PeriodList from '@components/PeriodList';
 import MessageController from './storage/MessageController';
-import PeriodList from './components/PeriodList';
-import { IPeriodInfo, TMessageViewFilter, IMessageViewSettings } from './typings/types';
+import { IPeriodInfo, TMessageViewFilter, IMessageViewSettings } from '@typings/types';
 
 export enum AppStage {
     SELECT_FILE,
@@ -21,19 +21,19 @@ export type IAppProps = {};
 
 export interface IAppState {
     stage: AppStage;
-    error: Error;
-    messages: MessageController;
+    error: Error | null;
+    messages: MessageController | null;
     settings: IMessageViewSettings;
 }
 
 export default class App extends React.Component<IAppProps, IAppState> {
-    state: IAppState = {
+    override state: IAppState = {
         stage: AppStage.SELECT_FILE,
         error: null,
         messages: null,
         settings: {
             showOnly: TMessageViewFilter.ALL
-        }
+        },
     };
 
     /**
@@ -43,11 +43,11 @@ export default class App extends React.Component<IAppProps, IAppState> {
         this.setState({ stage: AppStage.PARSING });
 
         console.log('Loading file...');
-        
+
         try {
             const af = new ArchiveFile(file);
             await af.read();
-        
+
             if (af.meta.v < '2.0') {
                 console.log(`Detected deprecated version ${af.meta.v}. Trying to convert`);
 
@@ -64,7 +64,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 messages: msgCtl
             });
         } catch (error) {
-            this.setState({ error });
+            this.setState({ error: error as Error });
         }
     }
 
@@ -86,12 +86,12 @@ export default class App extends React.Component<IAppProps, IAppState> {
             return { settings };
         });
     };
-    
+
     /**
      * Получение сообщений по периоду
      */
     private getMessages = () => {
-        const messages = this.state.messages.getMessagesByPeriod(
+        const messages = this.state.messages?.getMessagesByPeriod(
             this.state.settings.year,
             this.state.settings.month
         );
@@ -128,7 +128,7 @@ export default class App extends React.Component<IAppProps, IAppState> {
         });
     };
 
-    public render() {
+    public override render() {
         const { error, stage, settings, messages } = this.state;
 
         if (error) {

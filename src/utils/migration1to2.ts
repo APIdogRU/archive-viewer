@@ -1,11 +1,11 @@
-import { IAttachment } from '@apidog/vk-typings';
-import { IArchiveMeta, IArchiveRoot, IArchiveData } from '../typings/types';
-import {
+import type { AttachmentType, IAttachment, IMessage } from '@apidog/vk-typings';
+import type { IArchiveMeta, IArchiveRoot, IArchiveData } from '@typings/types';
+import type {
     IArchiveLegacyMeta,
     IArchiveLegacyAttachment,
     IArchiveLegacy,
     IArchiveLegacyMessage
-} from '../typings/archive-legacy';
+} from '@typings/archive-legacy';
 
 // Базовая дата для версии v1
 const d2006 = 1138741200;
@@ -20,13 +20,14 @@ const convertMeta = (meta: IArchiveLegacyMeta): IArchiveMeta => {
         peer: meta.p,
         ownerId: meta.a,
         owner: { firstName, lastName },
-        d: meta.d
-    }
+        d: meta.d,
+    };
 };
 
-const convertAttachment = (attach: IArchiveLegacyAttachment): IAttachment<any> => {
+const convertAttachment = (attach: IArchiveLegacyAttachment): IAttachment<any> | undefined => {
     let type = null;
     let res = null;
+
     switch (attach.t) {
         case 4:
             type = 'sticker';
@@ -90,22 +91,23 @@ const convertAttachment = (attach: IArchiveLegacyAttachment): IAttachment<any> =
             };
             break;
 
-        default:
+        default: return undefined;
     }
 
-    return {type, [type]: res};
+    return { type, [type]: res };
 };
 
 const convertForwardedMessages = (meta: IArchiveMeta, fwdmsg: IArchiveLegacyMessage) => convertMessage(meta, fwdmsg);
 
-const convertMessage = (meta: IArchiveMeta, message: IArchiveLegacyMessage) => {
+const convertMessage = (meta: IArchiveMeta, message: IArchiveLegacyMessage): IMessage => {
     return {
+        peer_id: meta.d,
         date: fixDate(message.d),
         from_id: message.f,
         text: message.t,
         id: message.i,
         out: message.f === meta.ownerId,
-        attachments: message.a ? message.a.map(convertAttachment) : [],
+        attachments: message.a ? message.a.map(convertAttachment).filter(Boolean) as IAttachment<AttachmentType>[] : [],
         fwd_messages: message.m ? message.m.map(convertForwardedMessages.bind(null, meta)) : []
     };
 };

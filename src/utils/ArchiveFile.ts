@@ -1,5 +1,5 @@
-import { IArchiveMeta, IArchiveRoot } from '../typings/types';
-import { IArchiveLegacy } from '../typings/archive-legacy';
+import type { IArchiveMeta, IArchiveRoot } from '@typings/types';
+import type { IArchiveLegacy } from '@typings/archive-legacy';
 
 export default class ArchiveFile {
     private readonly mFile?: File;
@@ -10,6 +10,11 @@ export default class ArchiveFile {
     }
 
     public read = async(): Promise<void> => new Promise((resolve, reject) => {
+        if (!this.mFile) {
+            reject();
+            return;
+        }
+
         const reader = new FileReader();
 
         reader.onload = () => {
@@ -37,8 +42,10 @@ export default class ArchiveFile {
      * Обработка данных архива функцией
      * Например, для конвертации из старого формата
      */
-    public process = (handler: (input: IArchiveRoot | IArchiveLegacy) => IArchiveRoot) => {
-        this.mRoot = handler(this.mRoot);
+    public process = <Input extends IArchiveRoot | IArchiveLegacy>(handler: (input: Input) => IArchiveRoot) => {
+        if (!this.mRoot) throw new Error('File not passed');
+
+        this.mRoot = handler(this.mRoot as Input);
         return this.mRoot;
     }
 

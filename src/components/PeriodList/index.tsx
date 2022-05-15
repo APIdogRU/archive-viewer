@@ -1,8 +1,10 @@
 import * as React from 'react';
-import MessageController from '../../storage/MessageController';
-import { IPeriodInfo } from '../../typings/types';
-import getMonth from '../../utils/getMonth';
 import classNames from 'classnames';
+
+import type { IPeriodInfo } from '@typings/types';
+import getMonth from '@utils/getMonth';
+
+import MessageController from '../../storage/MessageController';
 
 export type OnPeriodChanged = (period: IPeriodInfo) => any;
 

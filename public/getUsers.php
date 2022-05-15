@@ -14,7 +14,7 @@
 
 	$obj = [
 		"user_ids" => $userIds,
-		"v" => "5.108",
+		"v" => "5.141",
 		"fields" => "photo_50,screen_name",
 		"access_token" => file_get_contents('./.token')
 	];

@@ -1,7 +1,6 @@
 import { Array as SArray } from 'sugar';
-import { stringify } from 'querystring';
-import { IAccount, IMessage, IUser } from '@apidog/vk-typings';
-import { IArchiveRoot, IPeriodInfo, IUserTable } from '../typings/types';
+import type { IAccount, IMessage } from '@apidog/vk-typings';
+import type { IArchiveRoot, IPeriodInfo, IUserTable } from '@typings/types';
 
 export type IPeriodMessageStorage = Record<number, Record<number, IMessage[]>>;
 
@@ -9,17 +8,17 @@ export default class MessageController {
     /**
      * Все сообщения
      */
-    private messages: IMessage[];
+    private messages: IMessage[] = [];
 
     /**
      * Информация о пользователях и группах
      */
-    private users: Record<number, IAccount>;
+    private users: Record<number, IAccount> = {};
 
     /**
      * Сгруппированные сообщения
      */
-    private messagesGrouped: IPeriodMessageStorage;
+    private messagesGrouped: IPeriodMessageStorage = {};
 
     /**
      * Чтение из архива
@@ -27,10 +26,10 @@ export default class MessageController {
     public readFromArchive = async(archive: IArchiveRoot) => {
         const rawUsers = await this.fetchUserInfo(archive);
 
-        this.users = rawUsers.reduce((users: IUserTable, user: IUser) => {
+        this.users = rawUsers.reduce((users: IUserTable, user: IAccount) => {
             users[user.id] = user;
             return users;
-        }, {});
+        }, {} as IUserTable);
 
         this.messages = archive.data.map(this.fixMessages);
 
@@ -84,7 +83,7 @@ export default class MessageController {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: stringify({ userIds })
+                body: new URLSearchParams({ userIds }).toString(),
             });
 
             const { response }: { response: IAccount[] } = await res.json();

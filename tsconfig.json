@@ -1,10 +1,25 @@
 {
 	"compilerOptions": {
 		"outDir": "./dist/",
-		"noImplicitAny": true,
+		"noImplicitReturns": false,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
 		"module": "commonjs",
 		"target": "es6",
 		"jsx": "react",
-		"allowJs": true
-	}
+		"allowJs": true,
+		/* Врубить после переписи */
+		"strict": false,
+		"baseUrl": "src",
+		"paths": {
+			"@components/*": ["components/*"],
+			"@typings/*": ["typings/*"],
+			"@icons": ["icons"],
+			"@storage/*": ["storage/*"],
+			"@utils/*": ["utils/*"]
+		}
+	},
+	"include": [
+        "src/**/*"
+    ],
 }

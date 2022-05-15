@@ -1,4 +1,4 @@
-import { IMessage, IAccount } from '@apidog/vk-typings';
+import type { IMessage, IAccount } from '@apidog/vk-typings';
 
 export interface IArchiveRoot {
     meta: IArchiveMeta;

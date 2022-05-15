@@ -1,6 +1,8 @@
 import * as React from 'react';
+
+import { Icon, iconOpenInNew, iconVk, iconDog } from '@icons';
+
 import './LinkCard.css';
-import { Icon, iconOpenInNew, iconVk, iconDog } from '../../icons';
 
 export type ILinkCardProps = {
     href: string;
