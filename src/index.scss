@@ -4,6 +4,16 @@
     box-sizing: border-box;
 }
 
+:root {
+    --color-primary: #5e7eba;
+
+    --color-background: white;
+    --color-text: black;
+
+    --color-header-background: #eaecf0;
+    --color-header-text: #66768f;
+}
+
 html, body, #root {
     height: 100%;
 }
@@ -15,40 +25,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.app {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
-    &-page {
-        &__select {
-            text-align: center;
-
-            & h1 {
-                font-size: 2rem;
-            }
-        }
-
-        &__view {
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    &-paper {
-        padding: 1.5rem;
-
-        box-shadow: 0 0 10px -2px rgba(0, 0, 0, .4);
-    }
-
-    &-footer {
-        font-size: 10px;
-        margin-top: 1em;
-        text-align: center;
-        color: #888888;
-    }
+a,
+a:visited {
+    color: var(--color-primary);
+    text-decoration: none;
 }
 
 $viewer-content-height: 60px;

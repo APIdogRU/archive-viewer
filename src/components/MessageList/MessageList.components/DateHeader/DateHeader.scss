@@ -1,0 +1,12 @@
+.MessageList-DateHeader {
+    position: sticky;
+    top: 0;
+
+    padding: 0 20px;
+
+    background: var(--color-header-background);
+    color: var(--color-header-text);
+
+    font-weight: 600;
+    line-height: 32px;
+}

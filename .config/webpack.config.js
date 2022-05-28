@@ -41,9 +41,8 @@ module.exports = {
         ],
 	},
 	plugins: [
-		new webpack.EnvironmentPlugin({
-			VERSION: process.env.npm_package_version,
-			YEAR: String(new Date().getFullYear()),
+		new webpack.DefinePlugin({
+			'process.env.APP_VERSION': JSON.stringify(process.env.npm_package_version),
 		}),
 		new HtmlWebpackPlugin({
 			template: path.resolve('public', 'index.html'),

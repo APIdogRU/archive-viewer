@@ -1,18 +1,15 @@
-.file-chooser {
+.FileChooser {
     position: relative;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 250px;
 
-    width: 80%;
-    height: 100px;
-    
-    margin: 16px auto;
+    margin: 1rem auto;
+    padding: 1.2rem;
 
-    border: 2px dotted blue;
+    border: 2px dotted var(--color-primary);
+    text-align: center;
 
-    &__input {
+    &-Input {
         opacity: 0;
         position: absolute;
         top: 0;

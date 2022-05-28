@@ -1,0 +1,28 @@
+.LinkCard {
+    display: inline-grid;
+    align-items: center;
+    grid-template-columns: 30px 1fr auto;
+
+    padding: 4px 6px;
+
+    border: 1px solid var(--color-header-background);
+
+    .Icon {
+        color: var(--color-primary);
+    }
+
+    &-Title {
+        flex: 1 0 auto;
+        padding: 0 8px;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    &-Aside {
+        display: flex;
+        flex-flow: row nowrap;
+        line-height: 0;
+    }
+}

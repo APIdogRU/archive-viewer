@@ -1,0 +1,18 @@
+.Viewer {
+    height: 100vh;
+
+    display: flex;
+    flex-flow: row nowrap;
+
+    &-Period,
+    &-Content {
+        overflow: scroll;
+    }
+
+    &-Period {
+        width: 150px;
+        min-width: 150px;
+
+        border-right: 1px solid var(--color-header-background);
+    }
+}

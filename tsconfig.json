@@ -9,13 +9,12 @@
 		"jsx": "react",
 		"allowJs": true,
 		/* Врубить после переписи */
-		"strict": false,
+		"strict": true,
+		"skipLibCheck": true,
 		"baseUrl": "src",
 		"paths": {
 			"@components/*": ["components/*"],
 			"@typings/*": ["typings/*"],
-			"@icons": ["icons"],
-			"@storage/*": ["storage/*"],
 			"@utils/*": ["utils/*"]
 		}
 	},
