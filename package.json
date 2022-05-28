@@ -32,7 +32,8 @@
 	"homepage": "https://apidog.ru/archive-viewer/",
 	"scripts": {
 		"start": "webpack serve --config ./.config/webpack.config.js",
-		"build": "webpack --config ./.config/webpack.config.js"
+		"build": "webpack --config ./.config/webpack.config.js",
+		"build:production": "NODE_ENV=production npm run build"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
