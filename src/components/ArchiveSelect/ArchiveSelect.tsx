@@ -13,7 +13,7 @@ interface IArchiveSelectProps {
     setError: (error: string) => void;
 }
 
-const footer = `APIdog © 2022 [${process.env.APP_VERSION}]`;
+const footer = `APIdog © 2023 [${process.env.APP_VERSION}]`;
 
 export const ArchiveSelect: React.FC<IArchiveSelectProps> = ({ setArchiveInfo, setError, setLoading }) => {
     const onFileSelected = React.useCallback((file: File) => {
