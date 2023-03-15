@@ -6,7 +6,7 @@ export enum FilterName {
 
 export type FilterFunction = (message: IMessage) => boolean;
 
-export const fitlerImpl: Record<FilterName, FilterFunction> = {
+export const filterImpl: Record<FilterName, FilterFunction> = {
     [FilterName.WITH_ATTACHMENTS]: message => message.attachments !== undefined && message.attachments.length > 0,
 };
 

@@ -6,7 +6,7 @@ import { PeriodPanel } from '@components/PeriodPanel/PeriodPanel';
 import { MessageList } from '@components/MessageList/MessageList';
 
 import { FilterPanel } from './ArchiveViewer.components/FilterPanel/FilterPanel';
-import { FilterName, filterNames, fitlerImpl, allFilters } from './filters';
+import { FilterName, filterNames, filterImpl, allFilters } from './filters';
 
 import './ArchiveViewer.scss';
 
@@ -27,7 +27,7 @@ export const ArchiveViewer: React.FC<IArchiveViewerProps> = ({ archive, accounts
 
         let messages = [...messagesByPeriod];
         for (const filterName of filters) {
-            const filter = fitlerImpl[filterName];
+            const filter = filterImpl[filterName];
 
             messages = messages.filter(message => filter(message));
         }
