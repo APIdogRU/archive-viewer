@@ -20,7 +20,7 @@ export const PeriodItem: React.FC<IPeriodItemProps> = ({ period, setPeriod, acti
     return (
         <li className={`PeriodPanel-Item ${active && 'PeriodPanel-Item_active'}`}>
             <a href={`#year=${period.year}&month=${period.month}`} onClick={onClick}>
-                <span className="PeriodPanel-ItemTitle">{period.month}/{period.year}</span>
+                <span className="PeriodPanel-ItemTitle">{period.month + 1}/{period.year}</span>
                 <span className="PeriodPanel-ItemCount">{period.count}</span>
             </a>
         </li>
