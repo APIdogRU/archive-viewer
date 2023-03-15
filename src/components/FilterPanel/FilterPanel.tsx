@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { FilterName } from '@components/ArchiveViewer/filters';
+
+import type { FilterName } from '@components/ArchiveViewer/filters';
 import { Checkbox } from '@components/Checkbox/Checkbox';
 
-interface IFilterPanelProps {
-    filters: FilterName[];
-    selected: FilterName[];
-    filterNames: Record<FilterName, string>;
-    setSelected: (filters: FilterName[]) => void;
-}
+import type { IFilterPanelProps } from './FilterPanel.typings';
+import { filterPanelCn } from './FilterPanel.const';
 
 export const FilterPanel: React.FC<IFilterPanelProps> = React.memo(({ filters, selected, filterNames, setSelected }) => {
     const setChecked = function(filterKey: FilterName) {
@@ -18,7 +15,7 @@ export const FilterPanel: React.FC<IFilterPanelProps> = React.memo(({ filters, s
         }
     };
     return (
-        <div className="FilterPanel">
+        <div className={filterPanelCn}>
             {filters.map(filterKey => (
                 <Checkbox
                     key={filterKey}

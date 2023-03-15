@@ -12,11 +12,17 @@ export const App: React.FC = () => {
     const [error, setError] = React.useState<string | undefined>(undefined);
     const [archiveInfo, setArchiveInfo] = React.useState<IArchiveComposite | undefined>(undefined);
 
-    if (error) return <AppError error={error} />;
+    if (error) {
+        return <AppError error={error} />;
+    }
 
-    if (loading) return <AppLoading />;
+    if (loading) {
+        return <AppLoading />;
+    }
 
-    if (archiveInfo) return <ArchiveViewer {...archiveInfo} />;
+    if (archiveInfo) {
+        return <ArchiveViewer {...archiveInfo} />;
+    }
 
     return (
         <ArchiveSelect

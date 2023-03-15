@@ -1,16 +1,20 @@
 import * as React from 'react';
 
-import type { IArchiveComposite } from '@typings/IArchiveComposite';
 import type { IPeriodInfo } from '@typings/IPeriodInfo';
 import { PeriodPanel } from '@components/PeriodPanel/PeriodPanel';
 import { MessageList } from '@components/MessageList/MessageList';
+import { FilterPanel } from '@components/FilterPanel/FilterPanel';
 
-import { FilterPanel } from './ArchiveViewer.components/FilterPanel/FilterPanel';
 import { FilterName, filterNames, filterImpl, allFilters } from './filters';
+import {
+    archiveViewerCn,
+    archiveViewerContentCn,
+    archiveViewerFilterCn,
+    archiveViewerPeriodCn,
+} from './ArchiveViewer.const';
+import type { IArchiveViewerProps } from './ArchiveViewer.typings';
 
 import './ArchiveViewer.scss';
-
-type IArchiveViewerProps = IArchiveComposite;
 
 export const ArchiveViewer: React.FC<IArchiveViewerProps> = ({ archive, accounts, index }) => {
     const [period, setPeriod] = React.useState<IPeriodInfo | undefined>(undefined);
@@ -35,15 +39,15 @@ export const ArchiveViewer: React.FC<IArchiveViewerProps> = ({ archive, accounts
     }, [messagesByPeriod, filters]);
 
     return (
-        <div className="Viewer">
-            <div className="Viewer-Period">
+        <div className={archiveViewerCn}>
+            <div className={archiveViewerPeriodCn}>
                 <PeriodPanel
                     current={period}
                     periods={index.periods}
                     setPeriod={setPeriod}
                 />
             </div>
-            <div className="Viewer-Content">
+            <div className={archiveViewerContentCn}>
                 {messages ? (
                     <MessageList
                         messages={messages}
@@ -51,7 +55,7 @@ export const ArchiveViewer: React.FC<IArchiveViewerProps> = ({ archive, accounts
                     />
                 ) : 'Выберите промежуток'}
             </div>
-            <div className="Viewer-Filter">
+            <div className={archiveViewerFilterCn}>
                 <FilterPanel
                     filters={allFilters}
                     filterNames={filterNames}

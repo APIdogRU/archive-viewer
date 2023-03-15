@@ -20,6 +20,7 @@ export const MessageAttachmentSticker: React.FC<IStickerProps> = ({ sticker }) =
         <img
             className="Sticker"
             src={best.url}
-            alt="Sticker" />
+            alt="Sticker"
+        />
     );
 };

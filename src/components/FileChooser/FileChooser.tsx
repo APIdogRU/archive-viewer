@@ -1,13 +1,13 @@
 import * as React from 'react';
 
+import type { IFileChooserProps } from './FileChooser.typings';
+import {
+    fileChooserCn,
+    fileChooserInputCn,
+    fileChooserLabelCn,
+} from './FileChooser.const';
+
 import './FileChooser.scss';
-
-export type FileChooserCallback = (file: File) => void;
-
-interface IFileChooserProps {
-    label: string;
-    onFileSelected: FileChooserCallback;
-}
 
 export const FileChooser: React.FC<IFileChooserProps> = ({ label, onFileSelected: onChoose }) => {
     const inputId = React.useId();
@@ -20,16 +20,18 @@ export const FileChooser: React.FC<IFileChooserProps> = ({ label, onFileSelected
     }, [onChoose]);
 
     return (
-        <div className="FileChooser">
+        <div className={fileChooserCn}>
             <input
                 accept="application/json"
-                className="FileChooser-Input"
+                className={fileChooserInputCn}
                 id={inputId}
                 type="file"
-                onChange={onChange} />
+                onChange={onChange}
+            />
             <label
                 htmlFor={inputId}
-                className="FileChooser-Label">
+                className={fileChooserLabelCn}
+            >
                 {label}
             </label>
         </div>

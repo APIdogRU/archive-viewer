@@ -7,7 +7,7 @@ interface IPhotoProps {
     photo: IPhoto;
 }
 
-export const MessageAttachmentPhoto: React.FC<IPhotoProps> = ({ photo }) => {
+export const MessageAttachmentPhoto: React.FC<IPhotoProps> = React.memo(({ photo }) => {
     let thumbnail: string = (photo as IPatchedPhoto).src_thumb;
     let original: string = (photo as IPatchedPhoto).src_max;
 
@@ -28,4 +28,4 @@ export const MessageAttachmentPhoto: React.FC<IPhotoProps> = ({ photo }) => {
             <img src={thumbnail} alt="Photo" />
         </a>
     );
-};
+}, (prev, next) => prev.photo.id === next.photo.id);

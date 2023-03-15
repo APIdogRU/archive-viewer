@@ -11,10 +11,12 @@
 		/* Врубить после переписи */
 		"strict": true,
 		"skipLibCheck": true,
+		"importsNotUsedAsValues": "error",
 		"baseUrl": "src",
 		"paths": {
 			"@components/*": ["components/*"],
 			"@typings/*": ["typings/*"],
+			"@lib/*": ["lib/*"],
 			"@utils/*": ["utils/*"]
 		}
 	},

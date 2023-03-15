@@ -1,28 +1,24 @@
 import * as React from 'react';
 
-import './Checkbox.scss';
+import type { ICheckboxProps } from './Checkbox.typings';
+import { checkboxBoxCn, checkboxCn, checkboxLabelCn } from './Checkbox.const';
 
-interface ICheckboxProps {
-    name: string;
-    label: string;
-    checked: boolean;
-    setChecked: (checked: boolean) => void;
-}
+import './Checkbox.scss';
 
 export const Checkbox: React.FC<ICheckboxProps> = ({ name, label, checked, setChecked }) => {
     const onChange = React.useCallback(() => {
         setChecked(checked);
     }, [setChecked, checked]);
     return (
-        <label className="Checkbox">
+        <label className={checkboxCn}>
             <input
                 type="checkbox"
                 name={name}
                 checked={checked}
                 onChange={onChange}
-                className="Checkbox-Box"
+                className={checkboxBoxCn}
             />
-            <span className="Checkbox-Label">{label}</span>
+            <span className={checkboxLabelCn}>{label}</span>
         </label>
     );
 };

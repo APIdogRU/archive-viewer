@@ -1,20 +1,13 @@
 import * as React from 'react';
-import type { IMessage } from '@apidog/vk-typings';
-import type { IAccountMap } from '@typings/IAccountMap';
 
 import { Message } from '@components/Message/Message';
 
-import { DateHeader } from './MessageList.components/DateHeader/DateHeader';
+import { DateHeader } from './-DateHeader/MessageList-DateHeader';
+import type { IMessageListProps } from './MessageList.typings';
+import { stringifyDate } from './MessageList.utils/stringifyDate';
+import { messageListCn, messageListInfoCn } from './MessageList.const';
 
 import './MessageList.scss';
-
-interface IMessageListProps {
-    messages: IMessage[];
-    accounts: IAccountMap;
-    depth?: number;
-}
-
-const stringifyDate = (date: Date): string => `${date.getFullYear}/${date.getMonth()}/${date.getDate()}`;
 
 export const MessageList: React.FC<IMessageListProps> = ({ messages, accounts, depth = 0 }) => {
     const list: React.ReactNode[] = [];
@@ -32,7 +25,7 @@ export const MessageList: React.FC<IMessageListProps> = ({ messages, accounts, d
             if (isRootDepth && stringifiedDate !== lastDate) {
                 lastDate = stringifiedDate;
 
-                list.push(<DateHeader key={`head${lastDate}`} date={date} />);
+                list.push(<DateHeader key={`head${lastDate}`} date={message.date} />);
             }
 
             list.push(
@@ -46,13 +39,11 @@ export const MessageList: React.FC<IMessageListProps> = ({ messages, accounts, d
         }
     } else {
         list.push(
-            <div className="MessageList-Info">Нет сообщений в данном периоде</div>
+            <div className={messageListInfoCn}>Нет сообщений в данном периоде</div>
         );
     }
 
     return (
-        <div className="MessageList">
-            {list}
-        </div>
+        <div className={messageListCn}>{list}</div>
     );
 };

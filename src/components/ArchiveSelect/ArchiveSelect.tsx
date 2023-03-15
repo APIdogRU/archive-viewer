@@ -1,17 +1,12 @@
 import * as React from 'react';
 
-import type { IArchiveComposite } from '@typings/IArchiveComposite';
 import { FileChooser } from '@components/FileChooser/FileChooser';
 import { Paper } from '@components/Paper/Paper';
 import { readArchive } from '@utils/readArchive';
 import { fetchAccountInformation } from '@utils/fetchAccountInformation';
 import { buildArchiveIndexes } from '@utils/buildArchiveIndexes';
 
-interface IArchiveSelectProps {
-    setArchiveInfo: (composite: IArchiveComposite) => void;
-    setLoading: (loading: boolean) => void;
-    setError: (error: string) => void;
-}
+import type { IArchiveSelectProps } from './ArchiveSelect.typings';
 
 const footer = `APIdog © 2023 [${process.env.APP_VERSION}]`;
 

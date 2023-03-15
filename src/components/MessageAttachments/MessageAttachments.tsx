@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { IAttachments } from '@apidog/vk-typings';
 
 import { MessageAttachmentPhoto } from './MessagesAttachments.components/Photo/Photo';
 import { MessageAttachmentLink } from './MessagesAttachments.components/Link/Link';
@@ -9,15 +8,10 @@ import { MessageAttachmentDocument } from './MessagesAttachments.components/Docu
 import { MessageAttachmentPost } from './MessagesAttachments.components/Post/Post';
 import { MessageAttachmentSticker } from './MessagesAttachments.components/Sticker/Sticker';
 import { MessageAttachmentAudioMessage } from './MessagesAttachments.components/AudioMessage/AudioMessage';
-
-import './MessageAttachments.scss';
-
-interface IMessageAttachmentsProps {
-    items: IAttachments;
-}
+import type { IMessageAttachmentsProps } from './MessageAttachments.typings';
 
 export const MessageAttachments: React.FC<IMessageAttachmentsProps> = React.memo(props => (
-    <div className="Message-Attachments">
+    <div className="MessageAttachments">
         {props.items.map((item, i) => {
             switch (item.type) {
                 case 'sticker': {

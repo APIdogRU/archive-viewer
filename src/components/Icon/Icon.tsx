@@ -1,14 +1,13 @@
 import * as React from 'react';
 
-import './Icon.scss';
+import type { IIconProps } from './Icon.typings';
+import { iconCn } from './Icon.const';
 
-interface IIconProps {
-    icon: string;
-}
+import './Icon.scss';
 
 export const Icon: React.FC<IIconProps> = React.memo(props => (
     <svg
-        className="Icon"
+        className={iconCn}
         viewBox="0 0 24 24"
         role="presentation"
     >

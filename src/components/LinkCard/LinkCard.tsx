@@ -4,23 +4,22 @@ import { Icon } from '@components/Icon/Icon';
 import { iconOpenInNew, iconVk, iconDog } from '@components/Icon/icons';
 import { getVK2APIdogLink } from '@utils/getVK2APIdogLink';
 
+import type { ILinkCardProps } from './LinkCard.typings';
+import {
+    linkCardCn,
+    linkCardAsideCn,
+    linkCardTitleCn,
+    titleAPIdog,
+    titleVk,
+} from './LinkCard.const';
+
 import './LinkCard.scss';
 
-export interface ILinkCardProps {
-    href: string;
-    icon: string;
-    title: string;
-    external?: boolean;
-}
-
-const titleVk = 'Открыть во ВКонтакте';
-const titleAPIdog = 'Открыть в APIdog';
-
 export const LinkCard: React.FC<ILinkCardProps> = ({ title, icon, href, external }) => (
-    <div className="LinkCard">
+    <div className={linkCardCn}>
         <Icon icon={icon} />
-        <div className="LinkCard-Title">{title}</div>
-        <div className="LinkCard-Aside">
+        <div className={linkCardTitleCn}>{title}</div>
+        <div className={linkCardAsideCn}>
             {external ? (
                 <a
                     href={href}
