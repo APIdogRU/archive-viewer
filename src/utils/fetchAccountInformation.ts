@@ -39,7 +39,7 @@ export async function fetchAccountInformation(archive: IArchiveRoot): Promise<IA
 
     for (let i = 0; i < chunks.length; ++i) {
         const userIds = chunks[i].join(',');
-        const request = await fetch('https://apidog.ru/archive-viewer/getUsers.php', {
+        const request = await fetch('https://apidog.ru/api/v4/vk.getUsers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -50,7 +50,6 @@ export async function fetchAccountInformation(archive: IArchiveRoot): Promise<IA
         const result = (await request.json()) as IVkApiResponse<IAccount[]> | IVkApiError;
 
         if ('response' in result) {
-
             result.response.forEach(item => {
                 const id = isGroupObject(item) ? -item.id : item.id;
 
