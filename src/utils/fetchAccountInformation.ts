@@ -1,4 +1,4 @@
-import type { IAccount, IGroup, IMessage, IVkApiError, IVkApiResponse } from '@apidog/vk-typings';
+import type { IAccount, IGroup, IMessage, IUser } from '@apidog/vk-typings';
 import type { IAccountMap } from '@typings/IAccountMap';
 import type { IArchiveRoot } from '@typings/IArchiveRoot';
 import { splitArrayToChunks } from './splitArrayToChunks';
@@ -47,16 +47,16 @@ export async function fetchAccountInformation(archive: IArchiveRoot): Promise<IA
             body: new URLSearchParams({ userIds }).toString(),
         });
 
-        const result = (await request.json()) as IVkApiResponse<IAccount[]> | IVkApiError;
+        const result = await request.json() as { result: Array<IUser | IGroup> };
 
-        if ('response' in result) {
-            result.response.forEach(item => {
+        if ('result' in result) {
+            result.result.forEach(item => {
                 const id = isGroupObject(item) ? -item.id : item.id;
 
                 accounts.set(id, item);
             });
         } else {
-            console.log('fetchAccountInformation: no response', result.error)
+            console.log('fetchAccountInformation: no response', result)
         }
     }
 
