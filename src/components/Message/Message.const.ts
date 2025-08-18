@@ -1,4 +1,3 @@
-import type { IAccount } from '@apidog/vk-typings';
 import { cn } from '@bem-react/classname';
 
 const cnMessage = cn('Message');
@@ -10,8 +9,3 @@ export const messageBodyCn = cnMessage('Body');
 export const messageTextCn = cnMessage('Text');
 export const messageForwardedCn = cnMessage('Forwarded');
 export const messageDateCn = cnMessage('Date');
-
-export const defaultAccount = {
-    first_name: 'unknown',
-    last_name: 'user/group',
-} as IAccount;

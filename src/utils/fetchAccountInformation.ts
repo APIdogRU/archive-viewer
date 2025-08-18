@@ -39,24 +39,28 @@ export async function fetchAccountInformation(archive: IArchiveRoot): Promise<IA
 
     for (let i = 0; i < chunks.length; ++i) {
         const userIds = chunks[i].join(',');
-        const request = await fetch('https://apidog.ru/api/v4/vk.getUsers', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({ userIds }).toString(),
-        });
-
-        const result = await request.json() as { result: Array<IUser | IGroup> };
-
-        if ('result' in result) {
-            result.result.forEach(item => {
-                const id = isGroupObject(item) ? -item.id : item.id;
-
-                accounts.set(id, item);
+        try {
+            const request = await fetch('https://apidog.ru/api/v4/vk.getUsers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ userIds }).toString(),
             });
-        } else {
-            console.log('fetchAccountInformation: no response', result)
+
+            const result = await request.json() as { result: Array<IUser | IGroup> };
+
+            if ('result' in result) {
+                result.result.forEach(item => {
+                    const id = isGroupObject(item) ? -item.id : item.id;
+
+                    accounts.set(id, item);
+                });
+            } else {
+                console.log('fetchAccountInformation: no response', result)
+            }
+        } catch (e) {
+            console.log('fetchAccountInformation: failed', e);
         }
     }
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import type { IUser } from '@apidog/vk-typings';
 
 import { MessageAttachments } from '@components/MessageAttachments/MessageAttachments';
 import { MessageList } from '@components/MessageList/MessageList';
@@ -16,17 +15,21 @@ import {
     messageForwardedCn,
     messagePhotoCn,
     messageTextCn,
-    defaultAccount,
 } from './Message.const';
 
 import './Message.scss';
 
 export const Message: React.FC<IMessageProps> = ({ message, accounts, depth = 0 }) => {
     const { user, name } = React.useMemo(() => {
+        const absId = Math.abs(message.from_id);
+
         let user = accounts.get(message.from_id) ?? {
-            ...defaultAccount,
+            first_name: message.from_id > 0 ? 'user' : 'group',
+            last_name: String(absId),
             id: message.from_id,
-            screen_name: `${message.from_id < 0 ? 'club' : 'id'}${Math.abs(message.from_id)}`,
+            screen_name: `${message.from_id > 0 ? 'id' : 'club'}${absId}`,
+            photo_50: 'https://vk.com/images/camera_50.png',
+            photo_100: 'https://vk.com/images/camera_100.png',
         };
 
         return {
