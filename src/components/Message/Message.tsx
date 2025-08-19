@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { MessageAttachments } from '@components/MessageAttachments/MessageAttachments';
 import { MessageList } from '@components/MessageList/MessageList';
+import { Avatar } from '@components/Avatar/Avatar';
 import { formatDate } from '@lib/formatDate';
 import { getAccountName } from '@lib/getAccountName';
 
@@ -46,10 +47,11 @@ export const Message: React.FC<IMessageProps> = ({ message, accounts, depth = 0 
     return (
         <div className={messageCn}>
             <div className={messageAvatarCn}>
-                <img
+                <Avatar
                     className={messagePhotoCn}
-                    src={user.photo_50}
+                    info={user}
                     alt={name}
+                    size={depth === 0 ? 'm' : 's'}
                 />
             </div>
             <div className={messageAuthorCn}>
