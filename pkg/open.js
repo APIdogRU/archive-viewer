@@ -1,9 +1,11 @@
 const { exec } = require('child_process');
 
 function open(target) {
+    let opener;
+
     switch (process.platform) {
         case 'darwin':
-                opener = 'open';
+            opener = 'open';
             break;
 
         case 'win32':
