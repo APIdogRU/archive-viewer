@@ -34,3 +34,5 @@ test.*.json
 .token
 
 dist/
+archive-viewer*
+token.txt

@@ -4,8 +4,12 @@
 	"private": true,
 	"main": "./src/index.js",
 	"types": "./dist/index.d.ts",
+	"bin": "pkg/index.js",
 	"dependencies": {
 		"@bem-react/classname": "1.5.12",
+		"body-parser": "1.20.3",
+		"express": "4.21.2",
+		"node-fetch": "2.7.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"sugar": "2.0.6"
@@ -17,6 +21,7 @@
 		"@types/react-dom": "18.0.11",
 		"css-loader": "6.7.3",
 		"html-webpack-plugin": "5.5.0",
+		"pkg": "5.8.1",
 		"sass": "1.59.3",
 		"sass-loader": "13.2.0",
 		"style-loader": "3.3.2",
@@ -31,9 +36,19 @@
 	"scripts": {
 		"start": "webpack serve --config ./.config/webpack.config.js",
 		"build": "webpack --config ./.config/webpack.config.js",
-		"build:production": "NODE_ENV=production npm run build"
+		"build:production": "NODE_ENV=production npm run build",
+		"pkg": "npm run build:production && node node_modules/.bin/pkg ."
 	},
 	"eslintConfig": {
 		"extends": "react-app"
+	},
+	"pkg": {
+		"scripts": "./dist/**/*.js",
+		"assets": "./dist/**/*",
+		"targets": [
+			"node12-win",
+			"node12-linux"
+		],
+		"outputPath": "."
 	}
 }
